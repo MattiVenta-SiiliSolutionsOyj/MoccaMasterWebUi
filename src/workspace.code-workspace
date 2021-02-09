@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../ArduinoEka"
+		},
+		{
+			"name": "WifiAuto",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
