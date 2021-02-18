@@ -23,7 +23,7 @@
 //#include <Servo.h>
 //#include <WiFiMDNSResponder.h>
 #include "RestServer.h"
-
+#include "index_html.h"
 
 #include "arduino_secrets.h" 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -71,6 +71,23 @@ void favicon(char * params = "") {
   Serial.println("favicon.ico");
 }
 
+void index(char * params = "") {
+   rest.addData(HTTP_COMMON_HEADER);
+
+  Serial.println("index");
+
+String s = INDEX_page; //Read HTML contents
+ //server.send(200, "text/html", s); //Send web page
+rest.addData( INDEX_page);
+//rest.addData("<!DOCTYPE html> <html lang=\"en\"> <head>\n<title>Bootstrap Example</title>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">\n<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js\"></script>\n<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script> \n </head>\n <body>  <div class=\"container\"><h2>Responsive Embed</h2><p>Create a responsive video and scale it nicely to the parent element with an 16:9 aspect ratio</p><div class=\"embed-responsive embed-responsive-16by9\"><iframe class=\"embed-responsive-item\" src=\"https://www.youtube.com/embed/tgbNymZ7vqY\"> </iframe> \n </div>\n</div>\n</body> \n</html>");
+
+   Serial.println("index");
+ 
+}
+
+
+
+
 
 
 void printWiFiStatus() {
@@ -114,7 +131,7 @@ void setup() {
     status = WiFi.begin(ssid, pass);
 
     // wait 10 seconds for connection:
-    delay(10000);
+    delay(3000);
 
   }
   server.begin();
@@ -129,7 +146,7 @@ void setup() {
   rest.addRoute(ANY, "/digital", digital);
   rest.addRoute(ANY, "/analog", analog);
   rest.addRoute(ANY, "/favicon.ico", favicon);
-
+  rest.addRoute(ANY, "/", index);
 
   
 }

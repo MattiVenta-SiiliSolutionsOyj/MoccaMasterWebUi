@@ -14,7 +14,7 @@
 #endif
 
 #ifndef HTTP_COMMON_HEADER
-#define HTTP_COMMON_HEADER "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: POST, GET, PUT, OPTIONS\r\nContent-Type: application/json\r\nConnection: close\r\n\n"
+#define HTTP_COMMON_HEADER "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: POST, GET, PUT, OPTIONS\r\nContent-Type: text/html\r\nConnection: close\r\n\n"
 #endif HTTP_COMMON_HEADER
 
 /*
@@ -30,7 +30,7 @@
 
 
 #ifndef OUTPUT_BUFFER_SIZE
-#define OUTPUT_BUFFER_SIZE 250
+#define OUTPUT_BUFFER_SIZE 2000
 #endif OUTPUT_BUFFER_SIZE
 
 #define JSON_START() addToBuffer("{ ");

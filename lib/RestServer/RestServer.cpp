@@ -29,7 +29,7 @@ void RestServer::run() {
    // JSON_CLOSE();
 
     // Send data for the client
-    send(0, 0);
+    send(8, 0);
 
     // Stop the client connection
     client_.stop();
@@ -89,7 +89,7 @@ void RestServer::addData(char* name, char * value) {
 }
 
 void RestServer::addData(char* data) {
-  char bufferAux[255] = {0};
+  char bufferAux[2000] = {0};
   uint16_t idx = 0;
 
   for (int i = 0; i < strlen(data); i++){
@@ -149,7 +149,7 @@ void RestServer::send(uint8_t chunkSize, uint8_t delayTime) {
   //int headerSize =  client_.println(buffer_);
 
 
-
+ DLOG(buffer_);
 
 
 
@@ -158,7 +158,7 @@ void RestServer::send(uint8_t chunkSize, uint8_t delayTime) {
     client_.print(buffer_);
 
 
-/*
+
   // Send chunk by chunk #####################################
 
   // Max iterations
@@ -167,7 +167,7 @@ void RestServer::send(uint8_t chunkSize, uint8_t delayTime) {
   // Send data
   for (uint8_t i = 0; i < max; i++) {
     char bufferAux[chunkSize+1];
-    memcpy(bufferAux, buffer_ + ((i*chunkSize)+headerSize), chunkSize);
+    memcpy(bufferAux, buffer_ + (i*chunkSize), chunkSize);
     bufferAux[chunkSize] = '\0';
 
     // DLOGChar(bufferAux);
@@ -176,8 +176,8 @@ void RestServer::send(uint8_t chunkSize, uint8_t delayTime) {
     // Wait for client_ to get data
     delay(delayTime);
   }
-  */
-  DLOG(buffer_);
+  
+ //DLOG(buffer_);
 }
 
 
