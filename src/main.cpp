@@ -20,8 +20,10 @@
 
 #include <SPI.h>
 #include <WiFi101.h>
-#include <Servo.h>
-#include <WiFiMDNSResponder.h>
+//#include <Servo.h>
+//#include <WiFiMDNSResponder.h>
+#include "RestServer.h"
+
 
 #include "arduino_secrets.h" 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -31,11 +33,45 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 
 int status = WL_IDLE_STATUS;
 
+
 WiFiServer server(80);
+
+RestServer rest(server);
 char mdnsName[] = "wifiAuto"; 
 // Create a MDNS responder to listen and respond to MDNS name requests.
-WiFiMDNSResponder mdnsResponder;
-Servo myservo;
+//WiFiMDNSResponder mdnsResponder;
+//Servo myservo;
+
+void digital(char * params = "") {
+
+  rest.addData(HTTP_COMMON_HEADER);
+  rest.addData("hello", "didiiidid");
+  rest.addData("lorem", "ipsum");
+    Serial.println("digital");
+
+}
+
+void analog(char * params = "") {
+  rest.addData(HTTP_COMMON_HEADER);
+  rest.addData("random-text", "tötum");
+  rest.addData("test", (int)1);
+  rest.addData("lorem", "ipsum");
+  Serial.println("analog");
+
+
+}
+void favicon(char * params = "") {
+  rest.addData(HTTP_REDIRECTION_HEADER);
+
+
+
+ // rest.addData("HTTP/1.1 302 Moved Permanently ");
+  rest.addData("Location: http://octopi.local/static/img/tentacle-32x32.png");
+  
+  Serial.println("favicon.ico");
+}
+
+
 
 void printWiFiStatus() {
   // print the SSID of the network you're attached to:
@@ -53,6 +89,9 @@ void printWiFiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
+
+
+
 void setup() {
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
@@ -76,6 +115,7 @@ void setup() {
 
     // wait 10 seconds for connection:
     delay(10000);
+
   }
   server.begin();
   // you're connected now, so print out the status:
@@ -83,80 +123,24 @@ void setup() {
 
 
 
-  // Setup the MDNS responder to listen to the configured name.
-  // NOTE: You _must_ call this _after_ connecting to the WiFi network and
-  // being assigned an IP address.
-  if (!mdnsResponder.begin(mdnsName)) {
-    Serial.println("Failed to start MDNS responder!");
-    while(1);
-  }
 
-  Serial.print("Server listening at http://");
-  Serial.print(mdnsName);
-  Serial.println(".local/");
+ 
 
-   myservo.attach(9); 
+  rest.addRoute(ANY, "/digital", digital);
+  rest.addRoute(ANY, "/analog", analog);
+  rest.addRoute(ANY, "/favicon.ico", favicon);
+
+
+  
 }
 
 
 void loop() {
-  // listen for incoming clients
-  WiFiClient client = server.available();
-  if (client) {
-    Serial.println("new client");
-    // an http request ends with a blank line
-    bool currentLineIsBlank = true;
-    while (client.connected()) {
-      if (client.available()) {
-        char c = client.read();
-        Serial.write(c);
 
 
+rest.run();
 
-        // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
-        // so you can send a reply
-        if (c == '\n' && currentLineIsBlank) {
-          // send a standard http response header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println("Connection: close");  // the connection will be closed after completion of the response
-          client.println("Refresh: 5");  // refresh the page automatically every 5 sec
-          client.println();
-          client.println("<!DOCTYPE HTML>");
-          client.println("<html>");
-          // output the value of each analog input pin
-          for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-            int sensorReading = analogRead(analogChannel);
-            client.print("analog input ");
-            client.print(analogChannel);
-            client.print(" is ");
-            client.print(sensorReading);
-            client.println("<br />");
-          }
-          client.println("</html>");
-
-
-           myservo.write(180);  
-          break;
-        }
-        if (c == '\n') {
-          // you're starting a new line
-          currentLineIsBlank = true;
-        }
-        else if (c != '\r') {
-          // you've gotten a character on the current line
-          currentLineIsBlank = false;
-        }
-      }
-    }
-    // give the web browser time to receive the data
-    delay(1);
-
-    // close the connection:
-    client.stop();
-    Serial.println("client disconnected");
-  }
+ 
 }
 
 
