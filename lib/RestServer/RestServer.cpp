@@ -149,7 +149,7 @@ void RestServer::send(uint8_t chunkSize, uint8_t delayTime) {
   //int headerSize =  client_.println(buffer_);
 
 
- DLOG(buffer_);
+ //DLOG(buffer_);
 
 
 
@@ -204,10 +204,10 @@ void RestServer::check() {
   bool currentLineIsBlank = true;
   char c;
 
-DLOG("client_.connected()");
+
 
 DLOG(client_.connected());
-DLOG("client_.avalible()");
+
 
 DLOG(client_.available());
 
@@ -216,7 +216,7 @@ DLOG(client_.available());
       if (client_.available()) {
        
     c = client_.read();
-     DLOGChar(c);
+   //  DLOGChar(c);
 
     // Start end of line process ////////////////
     // if you've gotten to the end of the line (received a newline

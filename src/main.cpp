@@ -42,21 +42,31 @@ char mdnsName[] = "wifiAuto";
 //WiFiMDNSResponder mdnsResponder;
 //Servo myservo;
 
-void digital(char * params = "") {
+void oikea(char * params = "") {
 
   rest.addData(HTTP_COMMON_HEADER);
   rest.addData("hello", "didiiidid");
   rest.addData("lorem", "ipsum");
-    Serial.println("digital");
+    Serial.println("oikeal");
 
 }
 
-void analog(char * params = "") {
+void vasen(char * params = "") {
   rest.addData(HTTP_COMMON_HEADER);
   rest.addData("random-text", "tötum");
   rest.addData("test", (int)1);
   rest.addData("lorem", "ipsum");
-  Serial.println("analog");
+  Serial.println("vasen");
+
+
+}
+
+
+void keypress(char * params = "") {
+  rest.addData(HTTP_COMMON_HEADER);
+  rest.addData("random-text", "tötum");
+
+  Serial.println("keypress");
 
 
 }
@@ -143,8 +153,9 @@ void setup() {
 
  
 
-  rest.addRoute(ANY, "/digital", digital);
-  rest.addRoute(ANY, "/analog", analog);
+  rest.addRoute(ANY, "/oikea", oikea);
+  rest.addRoute(ANY, "/vasen", vasen);
+   rest.addRoute(ANY, "/keypress", keypress);
   rest.addRoute(ANY, "/favicon.ico", favicon);
   rest.addRoute(ANY, "/", index);
 
