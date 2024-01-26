@@ -1,5 +1,6 @@
 #ifndef restserver_h
 #define restserver_h
+#define N_LOG
 
 // Include Arduino header
 #include "Arduino.h"

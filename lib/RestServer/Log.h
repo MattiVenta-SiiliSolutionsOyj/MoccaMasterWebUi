@@ -1,6 +1,9 @@
 #ifndef log_h
 #define log_h
 
+#define N_LOG
+
+#define N_DEBUG
 #ifndef N_LOG
 #define LOG_SETUP() Serial.begin(38400);
 #define LOG(var) Serial.println(var);
@@ -16,7 +19,7 @@
 #define DLOGChar(var) Serial.print(var);
 #else
 #define DLOG(var) ;
-#define DLOGChar(var) Serial.print(var);
+#define DLOGChar(var) ;
 #endif
 
 #endif

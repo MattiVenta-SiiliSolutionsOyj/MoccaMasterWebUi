@@ -53,8 +53,8 @@ void RestServer::addRoute(char * method, char * route, void (*f)(char * params) 
   routes_[routesIndex_].name     = route;
   routes_[routesIndex_].callback = f;
   
-  // DLOG( "Route added:" );
-  // DLOG( routes_[routesIndex_].name );
+   DLOG( "Route added:" );
+   DLOG( routes_[routesIndex_].name );
   routesIndex_++;
 }
 
@@ -89,7 +89,7 @@ void RestServer::addData(char* name, char * value) {
 }
 
 void RestServer::addData(char* data) {
-  char bufferAux[2000] = {0};
+  char bufferAux[3000] = {0};
   uint16_t idx = 0;
 
   for (int i = 0; i < strlen(data); i++){
@@ -211,6 +211,9 @@ DLOG(client_.connected());
 
 DLOG(client_.available());
 
+DLOG("client_.available()");
+
+
   while ( client_.connected() ) {
     
       if (client_.available()) {
@@ -282,9 +285,9 @@ DLOG(client_.available());
       }
 
       // Route callback (function)
-    //   DLOG(route);
+      DLOG(route);
      // routes_[0].callback(query);
-      //LOG("Route callback!");
+      DLOG("Route callback!");
  
 
 }

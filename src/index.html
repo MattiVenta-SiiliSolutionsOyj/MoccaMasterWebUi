@@ -1,0 +1,56 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>MoccaMaster</title>
+</head>
+<body>
+  <body>
+    <h1>MoccaMaster</h1>
+    <button id="fullButton">Full</button>
+    <button id="emptyButton">Empty</button>
+    <div id="status"></div>
+    <div id="fullValue"></div>
+    <div id="emptyValue"></div> 
+    <div id="value"></div>
+    <script>
+const update= (data)=>{
+    document.getElementById("status").textContent = data.status;
+    document.getElementById("fullValue").textContent = data.fullValue;
+    document.getElementById("emptyValue").textContent = data.emptyValue;
+    document.getElementById("value").textContent = data.value;
+    
+
+    //udate document
+    do
+    console.log("update",data);
+
+    }
+   const fullButton = document.getElementById("fullButton");
+        const emptyButton = document.getElementById("emptyButton");
+  fullButton.addEventListener("click", function() {
+            fetch("/full")
+        .then(response => {
+            return response.text();
+        }).then(data => {
+         update(data);
+        });});
+      emptyButton.addEventListener("click", function() {
+            fetch("/empty")
+        .then(response => {
+            return response.text();
+        }).then(data => {
+              console.log(data);
+        update(data);
+       
+        });});
+        fetch("/status")
+        .then(response => {
+            return response.text();
+        }).then(data => {
+           update(data);
+        });
+    </script>
+  </body>
+</html>

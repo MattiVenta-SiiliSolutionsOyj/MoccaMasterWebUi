@@ -1,46 +1,35 @@
 
 
  char INDEX_page[] PROGMEM = R"=====(
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <title>WifiAuto!</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-  $("button").keydown(function(){
-    $.get("oikea", function(data, status){    
-    });
-  });
-});
-
-$(document).ready(function(){
-  $("button").keyup(function(){
-    $.get("vasen", function(data, status){    
-    });
-  });
-});
-
-
-$(document).ready(function(){
-  $("button").keypress(function(){
-    $.get("keypress", function(data, status){    
-    });
-  });
-});
-
-
-</script>
+    <title>MoccaMaster</title>
 </head>
 <body>
-  <body>
-    <h1>WifiAuto!</h1>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-<button>Ohjaus</button>
-
-
-  </body>
-</html>)=====";
+    <h1>MoccaMaster</h1>
+    <button id="fullButton">Full</button>
+    <button id="emptyButton">Empty</button>
+    <div>
+        <label for="status">Status:</label>
+        <span id="status" class="bigger-text"></span>
+    </div>
+    <div>
+        <label for="fullValue">Full Value:</label>
+        <span id="fullValue"></span>
+    </div>
+    <div>
+        <label for="emptyValue">Empty Value:</label>
+        <span id="emptyValue"></span>
+    </div> 
+    <div>
+        <label for="value">Value:</label>
+        <span id="value"></span>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+)=====";
