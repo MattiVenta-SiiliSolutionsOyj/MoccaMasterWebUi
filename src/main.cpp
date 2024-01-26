@@ -20,25 +20,124 @@
 
 #include <SPI.h>
 #include <WiFi101.h>
-#include <Servo.h>
-#include <WiFiMDNSResponder.h>
+// #include <Servo.h>
+// #include <WiFiMDNSResponder.h>
+#include "RestServer.h"
+#include "index_html.h"
+#include "script_html.h"
 
-#include "arduino_secrets.h" 
+#include "arduino_secrets.h"
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;                 // your network key Index number (needed only for WEP)
+char ssid[] = SECRET_SSID; // your network SSID (name)
+char pass[] = SECRET_PASS; // your network password (use for WPA, or use as key for WEP)
+int keyIndex = 0;          // your network key Index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 
-WiFiServer server(80);
-char mdnsName[] = "wifiAuto"; 
-// Create a MDNS responder to listen and respond to MDNS name requests.
-WiFiMDNSResponder mdnsResponder;
-Servo myservo;
+int fullValue = 500;
+int emptyValue = 10;
 
-void printWiFiStatus() {
-  // print the SSID of the network you're attached to:
+WiFiServer server(80);
+
+RestServer rest(server);
+char mdnsName[] = "MoccaMaster";
+// Create a MDNS responder to listen and respond to MDNS name requests.
+// WiFiMDNSResponder mdnsResponder;
+// Servo myservo;
+
+void full(char *params = "")
+{
+
+  rest.addData(HTTP_JSON_HEADER);
+
+  fullValue = analogRead(0) - 15;
+
+  // Serial.println("full");
+  rest.addData("{");
+  rest.addData("value", fullValue);
+  rest.addData("fullValue", fullValue);
+  rest.addData("emptyValue", emptyValue);
+
+  rest.addData("\"status\":\"full\"");
+  rest.addData("}");
+}
+
+void empty(char *params = "")
+{
+  rest.addData(HTTP_JSON_HEADER);
+  // Serial.println("emty");
+  emptyValue = analogRead(0) + 15;
+  rest.addData("{");
+  rest.addData("value", emptyValue);
+  rest.addData("fullValue", fullValue);
+  rest.addData("emptyValue", emptyValue);
+
+  rest.addData("\"status\":\"empty\"");
+
+  rest.addData("}");
+}
+
+void favicon(char *params = "")
+{
+  rest.addData(HTTP_REDIRECTION_HEADER);
+
+  // rest.addData("HTTP/1.1 302 Moved Permanently ");
+  rest.addData("Location: http://172.19.76.107/static/img/tentacle-32x32.png");
+
+  //  Serial.println("favicon.ico");
+}
+
+void index(char *params = "")
+{
+  rest.addData(HTTP_COMMON_HEADER);
+ String s = INDEX_page;
+  rest.addData(INDEX_page);
+}
+
+void script(char *params = "")
+{
+  rest.addData(HTTP_COMMON_HEADER);
+  String s = SCRIPT_page;
+  rest.addData(SCRIPT_page);
+}
+
+
+
+void coffeePotStatus(char *params = "")
+{
+  rest.addData(HTTP_JSON_HEADER);
+
+  // Serial.println("CofeePotStatus");
+
+  //String s = INDEX_page; // Read HTML contents
+                         // server.send(200, "text/html", s); //Send web page
+  // rest.addData( INDEX_page);
+  // rest.addData("<!DOCTYPE html> <html lang=\"en\"> <head>\n<title>Bootstrap Example</title>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">\n<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js\"></script>\n<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script> \n </head>\n <body>  <div class=\"container\"><h2>Responsive Embed</h2><p>Create a responsive video and scale it nicely to the parent element with an 16:9 aspect ratio</p><div class=\"embed-responsive embed-responsive-16by9\"><iframe class=\"embed-responsive-item\" src=\"https://www.youtube.com/embed/tgbNymZ7vqY\"> </iframe> \n </div>\n</div>\n</body> \n</html>");
+
+  int value = analogRead(0);
+
+  rest.addData("{");
+  rest.addData("value", value);
+  rest.addData("fullValue", fullValue);
+  rest.addData("emptyValue", emptyValue);
+  if (value >= fullValue)
+  {
+    rest.addData("\"status\":\"full\"");
+  }
+  else if (value <= emptyValue)
+  {
+    rest.addData("\"status\":\"empty\"");
+  }
+  else
+  {
+    rest.addData("\"status\":\"in-between\"");
+  }
+  rest.addData("}");
+}
+
+void printWiFiStatus()
+{
+  Serial.begin(9600);
   Serial.print("SSID: ");
   Serial.println(WiFi.SSID());
 
@@ -53,110 +152,50 @@ void printWiFiStatus() {
   Serial.print(rssi);
   Serial.println(" dBm");
 }
-void setup() {
-  //Initialize serial and wait for port to open:
+
+void setup()
+{
+  // Initialize serial and wait for port to open:
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
 
   // check for the presence of the shield:
-  if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WiFi shield not present");
-    // don't continue:
-    while (true);
+  if (WiFi.status() == WL_NO_SHIELD)
+  {
+    // Serial.println("WiFi shield not present");
+    //  don't continue:
+    while (true)
+      ;
   }
 
   // attempt to connect to WiFi network:
-  while (status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(ssid);
+  while (status != WL_CONNECTED)
+  {
+    //  Serial.print("Attempting to connect to SSID: ");
+    // Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
 
     // wait 10 seconds for connection:
-    delay(10000);
+    delay(3000);
   }
   server.begin();
   // you're connected now, so print out the status:
-  printWiFiStatus();
+ // printWiFiStatus();
 
+  rest.addRoute(ANY, "/full", full);
+  rest.addRoute(ANY, "/empty", empty);
+  rest.addRoute(ANY, "/script.js", script);
+  // delay(500);
+  // endpoitn for cofeepotstatus
+  rest.addRoute(ANY, "/status", coffeePotStatus);
 
+  rest.addRoute(ANY, "/favicon.ico", favicon);
+  rest.addRoute(ANY, "/", index);
 
-  // Setup the MDNS responder to listen to the configured name.
-  // NOTE: You _must_ call this _after_ connecting to the WiFi network and
-  // being assigned an IP address.
-  if (!mdnsResponder.begin(mdnsName)) {
-    Serial.println("Failed to start MDNS responder!");
-    while(1);
-  }
-
-  Serial.print("Server listening at http://");
-  Serial.print(mdnsName);
-  Serial.println(".local/");
-
-   myservo.attach(9); 
 }
 
-
-void loop() {
-  // listen for incoming clients
-  WiFiClient client = server.available();
-  if (client) {
-    Serial.println("new client");
-    // an http request ends with a blank line
-    bool currentLineIsBlank = true;
-    while (client.connected()) {
-      if (client.available()) {
-        char c = client.read();
-        Serial.write(c);
-
-
-
-        // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
-        // so you can send a reply
-        if (c == '\n' && currentLineIsBlank) {
-          // send a standard http response header
-          client.println("HTTP/1.1 200 OK");
-          client.println("Content-Type: text/html");
-          client.println("Connection: close");  // the connection will be closed after completion of the response
-          client.println("Refresh: 5");  // refresh the page automatically every 5 sec
-          client.println();
-          client.println("<!DOCTYPE HTML>");
-          client.println("<html>");
-          // output the value of each analog input pin
-          for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-            int sensorReading = analogRead(analogChannel);
-            client.print("analog input ");
-            client.print(analogChannel);
-            client.print(" is ");
-            client.print(sensorReading);
-            client.println("<br />");
-          }
-          client.println("</html>");
-
-
-           myservo.write(180);  
-          break;
-        }
-        if (c == '\n') {
-          // you're starting a new line
-          currentLineIsBlank = true;
-        }
-        else if (c != '\r') {
-          // you've gotten a character on the current line
-          currentLineIsBlank = false;
-        }
-      }
-    }
-    // give the web browser time to receive the data
-    delay(1);
-
-    // close the connection:
-    client.stop();
-    Serial.println("client disconnected");
-  }
+void loop()
+{
+  // delay(100);
+  rest.run();
 }
-
-

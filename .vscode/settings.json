@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.impl": "cpp",
+        "*.tcc": "cpp",
+        "type_traits": "cpp"
+    }
+}

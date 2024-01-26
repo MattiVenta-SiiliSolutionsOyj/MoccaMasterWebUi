@@ -1,5 +1,4 @@
-#define SECRET_SSID "MMM"    // your network SSID (name)
-#define SECRET_PASS "nji)mko0"
-
+#define SECRET_SSID "SiiliLab"    // your network SSID (name)
+#define SECRET_PASS "MoCaMaster222"
 
 
