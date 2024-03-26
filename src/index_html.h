@@ -11,8 +11,8 @@
 </head>
 <body>
     <h1>MoccaMaster</h1>
-    <button id="fullButton">Full</button>
-    <button id="emptyButton">Empty</button>
+    <button id="fullButton">Update</button>
+  
     <div>
         <label for="status">Status:</label>
         <span id="status" class="bigger-text"></span>

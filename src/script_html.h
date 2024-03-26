@@ -7,37 +7,18 @@
     document.getElementById("value").textContent = jsonData.value;
 };
 
-const fullButton = document.getElementById("fullButton");
-const emptyButton = document.getElementById("emptyButton");
+const updateButton = document.getElementById("updateButton");
 
-fullButton.addEventListener("click", function() {
-    fetch("/full")
+const fetchAndUpdateStatus = () => {
+    fetch("/status")
         .then(response => {
             return response.text();
         })
         .then(data => {
             update(data);
-            location.reload();
         });
-});
-
-emptyButton.addEventListener("click", function() {
-    fetch("/empty")
-        .then(response => {
-            return response.text();
-        })
-        .then(data => {
-            update(data);
-            location.reload();
-        });
-});
-
-fetch("/status")
-    .then(response => {
-        return response.text();
-    })
-    .then(data => {
-        update(data);
-    });
+};
+setInterval(fetchAndUpdateStatus, 5000);
+updateButton.addEventListener("click", fetchAndUpdateStatus);
 
 )=====";
